@@ -1,7 +1,8 @@
-const CACHE_NAME = 'truself-daily-v1';
+const CACHE_NAME = 'truself-daily-v2';
 const ASSETS = [
   './',
   './index.html',
+  './admin.html',
   './config.json',
   './manifest.json',
   './icons/icon-192.png',

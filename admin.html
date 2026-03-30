@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ed8439">
+  <title>TruSelf Daily - Client Setup</title>
+  <style>
+    :root {
+      --primary: #ed8439;
+      --primary-dark: #d4722e;
+      --accent-green: #6fcf97;
+      --bg: #1a1a2e;
+      --bg2: #16213e;
+      --card: rgba(22, 33, 62, 0.6);
+      --input: rgba(15, 52, 96, 0.5);
+      --text: #c8d6e5;
+      --text-bright: #f0f0f0;
+      --text-dim: #7a8fa3;
+      --text-muted: #566a7f;
+      --border: rgba(237, 132, 57, 0.15);
+      --border-dim: rgba(237, 132, 57, 0.08);
+      --green: #22c55e;
+      --red: #ef4444;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(160deg, var(--bg) 0%, var(--bg2) 50%, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 40px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
+      padding: 20px;
+      border-bottom: 2px solid var(--primary);
+      text-align: center;
+    }
+
+    .header img { height: 40px; margin-bottom: 6px; }
+    .header h1 { font-size: 20px; color: var(--primary); font-weight: 700; }
+    .header .subtitle { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+
+    .container {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border-dim);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .card-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .field .hint {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    input[type="text"], input[type="email"], textarea {
+      width: 100%;
+      background: var(--input);
+      border: 1px solid var(--border-dim);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: inherit;
+      line-height: 1.5;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    textarea { resize: vertical; min-height: 80px; }
+
+    .time-inputs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .time-inputs input {
+      width: 90px;
+      text-align: center;
+    }
+
+    .time-add {
+      background: transparent;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      padding: 10px 14px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .time-add:hover { border-color: var(--primary); color: var(--primary); }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 8px;
+    }
+
+    .btn-generate {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: white;
+    }
+
+    .btn-generate:active { transform: scale(0.98); }
+
+    .btn-preview {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    .btn-copy {
+      background: var(--green);
+      color: white;
+    }
+
+    /* Output area */
+    .output {
+      display: none;
+      margin-top: 14px;
+    }
+
+    .output.visible { display: block; }
+
+    .link-box {
+      background: var(--input);
+      border: 1px solid var(--green);
+      border-radius: 8px;
+      padding: 12px;
+      word-break: break-all;
+      font-size: 12px;
+      color: var(--accent-green);
+      font-family: 'Consolas', 'Courier New', monospace;
+      line-height: 1.6;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .link-box:hover { background: rgba(15, 52, 96, 0.8); }
+
+    .share-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .share-buttons button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-share-copy {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-share-wa {
+      background: #25D366;
+      color: white;
+    }
+
+    .btn-share-email {
+      background: var(--primary);
+      color: white;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--green);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 300;
+      opacity: 0;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.error { background: var(--red); }
+
+    /* Saved clients list */
+    .client-list { margin-top: 8px; }
+
+    .client-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-dim);
+    }
+
+    .client-item:last-child { border-bottom: none; }
+
+    .client-item-name {
+      font-size: 14px;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .client-item-name:hover { color: var(--primary); }
+
+    .client-item-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .client-item-actions button {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 11px;
+      padding: 4px 10px;
+      cursor: pointer;
+    }
+
+    .client-item-actions button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .client-item-actions .delete-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <img src="https://truself.co.uk/wp-content/uploads/2025/12/Truself-logo.png" alt="TruSelf">
+    <h1>Client Setup</h1>
+    <div class="subtitle">Create a personalised TruSelf Daily link for your client</div>
+  </div>
+
+  <div class="container">
+
+    <!-- Saved clients -->
+    <div class="card" id="savedClientsCard" style="display:none">
+      <div class="card-label">Your Clients</div>
+      <div class="client-list" id="clientList"></div>
+    </div>
+
+    <!-- Client details -->
+    <div class="card">
+      <div class="card-label">Client Details</div>
+      <div class="field">
+        <label>Client Name</label>
+        <input type="text" id="clientName" placeholder="e.g. Dave Ward">
+      </div>
+      <div class="field">
+        <label>Coach Name</label>
+        <input type="text" id="coachName" placeholder="e.g. Sam Sinclair" value="Sam Sinclair">
+      </div>
+      <div class="field">
+        <label>Coach Email (reports sent here)</label>
+        <input type="email" id="coachEmail" placeholder="e.g. samsinclair@truself.co.uk" value="samsinclair@truself.co.uk">
+      </div>
+    </div>
+
+    <!-- Supplements -->
+    <div class="card">
+      <div class="card-label">Supplements</div>
+      <div class="field">
+        <textarea id="supplements" rows="6" placeholder="One supplement per line, e.g.&#10;Vitamin D3 + K2&#10;Magnesium Glycinate&#10;Omega 3 Fish Oil"></textarea>
+        <div class="hint">One per line. These appear as a checklist in the app.</div>
+      </div>
+    </div>
+
+    <!-- Habits -->
+    <div class="card">
+      <div class="card-label">Daily Habits</div>
+      <div class="field">
+        <textarea id="habits" rows="4" placeholder="One habit per line, e.g.&#10;Sleep (7+ hrs)&#10;Exercise&#10;Meditate"></textarea>
+        <div class="hint">One per line. Keep it to 3-6 habits for best engagement.</div>
+      </div>
+    </div>
+
+    <!-- Reminders -->
+    <div class="card">
+      <div class="card-label">Reminder Times</div>
+      <div class="field">
+        <div class="time-inputs" id="reminderTimes">
+          <input type="text" value="08:00" placeholder="HH:MM">
+          <input type="text" value="12:30" placeholder="HH:MM">
+          <input type="text" value="19:00" placeholder="HH:MM">
+          <button class="time-add" onclick="addReminderSlot()">+ Add</button>
+        </div>
+        <div class="hint">24-hour format. Client will be asked to allow notifications.</div>
+      </div>
+    </div>
+
+    <!-- Generate -->
+    <button class="btn btn-generate" onclick="generateLink()">Generate Client Link</button>
+    <button class="btn btn-preview" onclick="previewApp()">Preview App</button>
+
+    <!-- Output -->
+    <div class="output" id="output">
+      <div class="card">
+        <div class="card-label">Client Link Ready</div>
+        <div class="link-box" id="linkBox" onclick="copyLink()"></div>
+        <div class="share-buttons">
+          <button class="btn-share-copy" onclick="copyLink()">Copy</button>
+          <button class="btn-share-wa" onclick="shareWhatsApp()">WhatsApp</button>
+          <button class="btn-share-email" onclick="shareEmail()">Email</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ===================== SAVED CLIENTS =====================
+    function loadClients() {
+      try {
+        const raw = localStorage.getItem('truself_admin_clients');
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) { return []; }
+    }
+
+    function saveClients(clients) {
+      localStorage.setItem('truself_admin_clients', JSON.stringify(clients));
+    }
+
+    function renderClients() {
+      const clients = loadClients();
+      const card = document.getElementById('savedClientsCard');
+      const list = document.getElementById('clientList');
+
+      if (clients.length === 0) {
+        card.style.display = 'none';
+        return;
+      }
+
+      card.style.display = '';
+      list.innerHTML = '';
+      clients.forEach((c, i) => {
+        const div = document.createElement('div');
+        div.className = 'client-item';
+        div.innerHTML = `
+          <span class="client-item-name" onclick="loadClient(${i})">${esc(c.clientName)}</span>
+          <div class="client-item-actions">
+            <button onclick="loadClient(${i})">Edit</button>
+            <button onclick="regenerateClient(${i})">Link</button>
+            <button class="delete-btn" onclick="deleteClient(${i})">Delete</button>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function loadClient(index) {
+      const clients = loadClients();
+      const c = clients[index];
+      if (!c) return;
+
+      document.getElementById('clientName').value = c.clientName || '';
+      document.getElementById('coachName').value = c.coachName || '';
+      document.getElementById('coachEmail').value = c.coachEmail || '';
+      document.getElementById('supplements').value = (c.supplements || []).join('\n');
+      document.getElementById('habits').value = (c.habits || []).join('\n');
+
+      // Reminders
+      const container = document.getElementById('reminderTimes');
+      const addBtn = container.querySelector('.time-add');
+      container.querySelectorAll('input').forEach(el => el.remove());
+      (c.reminders || ['08:00', '12:30', '19:00']).forEach(t => {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = t;
+        input.placeholder = 'HH:MM';
+        container.insertBefore(input, addBtn);
+      });
+
+      document.getElementById('output').classList.remove('visible');
+      showToast('Loaded ' + c.clientName);
+    }
+
+    function regenerateClient(index) {
+      loadClient(index);
+      generateLink();
+    }
+
+    function deleteClient(index) {
+      const clients = loadClients();
+      const name = clients[index]?.clientName;
+      if (confirm(`Remove ${name} from your saved clients?`)) {
+        clients.splice(index, 1);
+        saveClients(clients);
+        renderClients();
+        showToast(name + ' removed');
+      }
+    }
+
+    function saveCurrentClient(config) {
+      const clients = loadClients();
+      const existing = clients.findIndex(c => c.clientName === config.clientName);
+      if (existing >= 0) {
+        clients[existing] = config;
+      } else {
+        clients.push(config);
+      }
+      saveClients(clients);
+      renderClients();
+    }
+
+    // ===================== FORM =====================
+    function getFormConfig() {
+      const clientName = document.getElementById('clientName').value.trim();
+      const coachName = document.getElementById('coachName').value.trim();
+      const coachEmail = document.getElementById('coachEmail').value.trim();
+      const supplements = document.getElementById('supplements').value
+        .split('\n').map(s => s.trim()).filter(Boolean);
+      const habits = document.getElementById('habits').value
+        .split('\n').map(s => s.trim()).filter(Boolean);
+
+      const reminderInputs = document.getElementById('reminderTimes').querySelectorAll('input');
+      const reminders = [];
+      reminderInputs.forEach(input => {
+        const val = input.value.trim();
+        if (/^\d{2}:\d{2}$/.test(val)) reminders.push(val);
+      });
+
+      return {
+        clientName,
+        appTitle: 'TruSelf Daily',
+        coachName: coachName || 'Sam Sinclair',
+        coachEmail: coachEmail || '',
+        reminders,
+        supplements,
+        habits
+      };
+    }
+
+    function validate(config) {
+      if (!config.clientName) {
+        showToast('Please enter a client name', true);
+        return false;
+      }
+      if (config.supplements.length === 0 && config.habits.length === 0) {
+        showToast('Add at least one supplement or habit', true);
+        return false;
+      }
+      return true;
+    }
+
+    // ===================== GENERATE =====================
+    let generatedUrl = '';
+
+    function generateLink() {
+      const config = getFormConfig();
+      if (!validate(config)) return;
+
+      const json = JSON.stringify(config);
+      const encoded = btoa(json);
+      const baseUrl = window.location.href.replace(/admin\.html.*$/, 'index.html');
+      generatedUrl = baseUrl + '#' + encoded;
+
+      document.getElementById('linkBox').textContent = generatedUrl;
+      document.getElementById('output').classList.add('visible');
+
+      // Save client to local list
+      saveCurrentClient(config);
+
+      showToast('Link generated for ' + config.clientName);
+    }
+
+    function previewApp() {
+      const config = getFormConfig();
+      if (!validate(config)) return;
+
+      const json = JSON.stringify(config);
+      const encoded = btoa(json);
+      const baseUrl = window.location.href.replace(/admin\.html.*$/, 'index.html');
+      window.open(baseUrl + '#' + encoded, '_blank');
+    }
+
+    // ===================== SHARE =====================
+    function copyLink() {
+      if (!generatedUrl) return;
+      navigator.clipboard.writeText(generatedUrl).then(() => {
+        showToast('Link copied!');
+      }).catch(() => {
+        // Fallback for older browsers
+        const ta = document.createElement('textarea');
+        ta.value = generatedUrl;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('Link copied!');
+      });
+    }
+
+    function shareWhatsApp() {
+      if (!generatedUrl) return;
+      const config = getFormConfig();
+      const text = `Hi ${config.clientName.split(' ')[0]}, here's your personalised TruSelf Daily tracker. Open this link and add it to your home screen:\n\n${generatedUrl}`;
+      window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+    }
+
+    function shareEmail() {
+      if (!generatedUrl) return;
+      const config = getFormConfig();
+      const subject = `Your TruSelf Daily Tracker`;
+      const body = `Hi ${config.clientName.split(' ')[0]},\n\nHere's your personalised TruSelf Daily tracker. Open this link on your phone and add it to your home screen:\n\n${generatedUrl}\n\nOnce you've added it to your home screen, you can open it any time to log your habits, supplements, meals, and journal.\n\nBest,\n${config.coachName}`;
+      window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    }
+
+    // ===================== UTILS =====================
+    function addReminderSlot() {
+      const container = document.getElementById('reminderTimes');
+      const addBtn = container.querySelector('.time-add');
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'HH:MM';
+      container.insertBefore(input, addBtn);
+    }
+
+    function esc(s) {
+      return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function showToast(msg, isError) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = `toast show${isError ? ' error' : ''}`;
+      setTimeout(() => { toast.className = 'toast'; }, 3000);
+    }
+
+    // ===================== INIT =====================
+    renderClients();
+  </script>
+</body>
+</html>

@@ -1106,13 +1106,57 @@
       }
     }
 
+    // ===================== CONFIG LOADING =====================
+    // Priority: 1) URL hash (from admin link), 2) localStorage config, 3) config.json fallback
+    function loadConfigFromHash() {
+      try {
+        const hash = window.location.hash.substring(1);
+        if (!hash) return null;
+        const json = atob(hash);
+        const config = JSON.parse(json);
+        if (config.clientName && config.supplements && config.habits) {
+          return config;
+        }
+      } catch (e) { /* not a valid config hash */ }
+      return null;
+    }
+
+    function loadConfigFromStorage() {
+      try {
+        const raw = localStorage.getItem('truself_config');
+        if (raw) return JSON.parse(raw);
+      } catch (e) { /* ignore */ }
+      return null;
+    }
+
+    function saveConfigToStorage(config) {
+      localStorage.setItem('truself_config', JSON.stringify(config));
+    }
+
     // ===================== INIT =====================
     async function init() {
-      try {
-        const resp = await fetch('./config.json');
-        CONFIG = await resp.json();
-      } catch (e) {
-        console.error('Failed to load config:', e);
+      // 1) Check URL hash (shared link from admin page)
+      const hashConfig = loadConfigFromHash();
+      if (hashConfig) {
+        CONFIG = { ...CONFIG, ...hashConfig };
+        saveConfigToStorage(CONFIG);
+        // Clean the hash so bookmarks/home screen don't carry it
+        history.replaceState(null, '', window.location.pathname);
+      } else {
+        // 2) Check localStorage for previously saved config
+        const storedConfig = loadConfigFromStorage();
+        if (storedConfig) {
+          CONFIG = { ...CONFIG, ...storedConfig };
+        } else {
+          // 3) Fall back to config.json
+          try {
+            const resp = await fetch('./config.json');
+            CONFIG = await resp.json();
+            saveConfigToStorage(CONFIG);
+          } catch (e) {
+            console.error('Failed to load config:', e);
+          }
+        }
       }
 
       document.getElementById('appTitle').textContent = CONFIG.appTitle;
