@@ -709,6 +709,9 @@
 
       // --- HABITS TAB ---
       if (state.tab === 'habits') {
+        // Notification prompt (shows once, friendly)
+        html += notifPromptHtml();
+
         html += `<div class="card"><div class="card-label">Daily Habits</div>`;
         CONFIG.habits.forEach((h, i) => {
           const checked = day.habits[i];
@@ -1091,19 +1094,86 @@
       }
     });
 
-    // ===================== SERVICE WORKER =====================
+    // ===================== NOTIFICATIONS =====================
+    let swRegistration = null;
+
     function registerSW() {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js')
           .then((reg) => {
             console.log('Service worker registered');
-            // Schedule reminders if notifications are permitted
-            if (Notification.permission === 'granted' && CONFIG.reminders.length > 0) {
-              reg.active?.postMessage({ type: 'SCHEDULE_REMINDERS', times: CONFIG.reminders });
-            }
+            swRegistration = reg;
+            scheduleReminders();
           })
           .catch((err) => console.error('SW registration failed:', err));
       }
+    }
+
+    function scheduleReminders() {
+      if (!swRegistration || !CONFIG.reminders || CONFIG.reminders.length === 0) return;
+      if (Notification.permission !== 'granted') return;
+
+      const sw = swRegistration.active || swRegistration.waiting || swRegistration.installing;
+      if (sw) {
+        sw.postMessage({ type: 'SCHEDULE_REMINDERS', times: CONFIG.reminders });
+      }
+    }
+
+    function shouldShowNotifPrompt() {
+      // Don't show if notifications aren't supported
+      if (!('Notification' in window) || !('serviceWorker' in navigator)) return false;
+      // Don't show if already granted or permanently denied
+      if (Notification.permission === 'granted') return false;
+      // Show if default (not yet asked) or if dismissed but not recently
+      if (Notification.permission === 'denied') {
+        // Browser has blocked - show soft reminder instead of prompt
+        return false;
+      }
+      // Check if user dismissed our prompt recently (24h cooldown)
+      const dismissed = localStorage.getItem('truself_notif_dismissed');
+      if (dismissed) {
+        const dismissedAt = parseInt(dismissed);
+        if (Date.now() - dismissedAt < 24 * 60 * 60 * 1000) return false;
+      }
+      return true;
+    }
+
+    function notifPromptHtml() {
+      if (Notification.permission === 'denied') {
+        return `<div class="notif-prompt" style="border-color: rgba(237,132,57,0.15);">
+          <p style="font-size:12px; color:var(--text-muted);">Notifications are blocked in your browser settings. You can enable them in your browser's site settings if you'd like daily reminders.</p>
+        </div>`;
+      }
+      if (!shouldShowNotifPrompt()) return '';
+      return `<div class="notif-prompt">
+        <p>Would you like gentle reminders to complete your daily check-in?</p>
+        <button class="notif-accept" onclick="requestNotifPermission()">Yes, remind me</button>
+        <button class="notif-dismiss" onclick="dismissNotifPrompt()">Not now</button>
+      </div>`;
+    }
+
+    function requestNotifPermission() {
+      Notification.requestPermission().then((result) => {
+        if (result === 'granted') {
+          showToast('Reminders enabled!');
+          scheduleReminders();
+          // Send a confirmation notification
+          if (swRegistration) {
+            swRegistration.showNotification('TruSelf Daily', {
+              body: 'Reminders are set up. You\'ll get a gentle nudge at your scheduled times.',
+              icon: './icons/icon-192.png'
+            });
+          }
+        } else {
+          showToast('No problem, you can enable reminders later');
+        }
+        render();
+      });
+    }
+
+    function dismissNotifPrompt() {
+      localStorage.setItem('truself_notif_dismissed', Date.now().toString());
+      render();
     }
 
     // ===================== CONFIG LOADING =====================

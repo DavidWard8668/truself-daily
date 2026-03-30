@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ed8439">
+  <title>TruSelf Daily - Coach Guide</title>
+  <style>
+    :root {
+      --primary: #ed8439;
+      --bg: #1a1a2e;
+      --bg2: #16213e;
+      --card: rgba(22, 33, 62, 0.6);
+      --text: #c8d6e5;
+      --text-bright: #f0f0f0;
+      --text-dim: #7a8fa3;
+      --text-muted: #566a7f;
+      --green: #22c55e;
+      --border: rgba(237, 132, 57, 0.15);
+      --border-dim: rgba(237, 132, 57, 0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(160deg, var(--bg) 0%, var(--bg2) 50%, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0 0 60px;
+      line-height: 1.6;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
+      padding: 24px 20px;
+      border-bottom: 2px solid var(--primary);
+      text-align: center;
+    }
+
+    .header img { height: 44px; margin-bottom: 8px; }
+    .header h1 { font-size: 22px; color: var(--primary); font-weight: 700; }
+    .header .subtitle { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 20px 16px;
+    }
+
+    h2 {
+      font-size: 17px;
+      color: var(--primary);
+      margin: 28px 0 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h2:first-child { margin-top: 0; }
+
+    h3 {
+      font-size: 14px;
+      color: var(--text-bright);
+      margin: 18px 0 8px;
+    }
+
+    p {
+      font-size: 14px;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border-dim);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .steps {
+      counter-reset: step;
+      list-style: none;
+      padding: 0;
+    }
+
+    .steps li {
+      counter-increment: step;
+      padding: 10px 0 10px 40px;
+      position: relative;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border-dim);
+    }
+
+    .steps li:last-child { border-bottom: none; }
+
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 10px;
+      width: 26px;
+      height: 26px;
+      background: rgba(237, 132, 57, 0.2);
+      color: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .highlight {
+      background: rgba(237, 132, 57, 0.1);
+      border: 1px solid rgba(237, 132, 57, 0.2);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 12px 0;
+      font-size: 13px;
+    }
+
+    .highlight strong { color: var(--primary); }
+
+    .privacy-box {
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 14px 0;
+    }
+
+    .privacy-box h3 {
+      color: var(--green);
+      margin-top: 0;
+    }
+
+    .privacy-box ul {
+      margin: 8px 0 0 18px;
+      font-size: 13px;
+    }
+
+    .privacy-box li {
+      margin-bottom: 6px;
+    }
+
+    code {
+      background: rgba(15, 52, 96, 0.5);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: var(--text-bright);
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .btn-admin {
+      display: block;
+      text-align: center;
+      padding: 14px;
+      background: linear-gradient(135deg, #d4722e, #ed8439);
+      color: white;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      margin: 20px 0;
+    }
+
+    .btn-admin:hover { text-decoration: none; opacity: 0.95; }
+
+    .faq dt {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-bright);
+      margin-top: 14px;
+    }
+
+    .faq dd {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin: 4px 0 0 0;
+    }
+
+    .notif-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 10px 0;
+    }
+
+    .notif-table th, .notif-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-dim);
+      text-align: left;
+    }
+
+    .notif-table th {
+      color: var(--primary);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .yes { color: var(--green); }
+    .partial { color: #f59e0b; }
+    .no { color: #ef4444; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <img src="https://truself.co.uk/wp-content/uploads/2025/12/Truself-logo.png" alt="TruSelf">
+    <h1>Coach Guide</h1>
+    <div class="subtitle">Everything you need to set up and manage TruSelf Daily for your clients</div>
+  </div>
+
+  <div class="container">
+
+    <h2>What Is TruSelf Daily?</h2>
+    <p>TruSelf Daily is a branded web app that your clients open on their phone each day to track habits, supplements, meals, mood, and journal entries. At the end of each day (or whenever they choose) they tap a button that emails you their full daily report.</p>
+    <p>There is no app store download. Clients open a link, add it to their home screen, and it works like a native app, including offline.</p>
+
+    <h2>Setting Up a New Client</h2>
+    <ol class="steps">
+      <li>Open the <a href="./admin.html">Client Setup page</a></li>
+      <li>Enter the client's full name, your name, and your email address</li>
+      <li>Type their supplements (one per line) and daily habits (one per line)</li>
+      <li>Set reminder times (24-hour format, e.g. 08:00, 19:00)</li>
+      <li>Click <strong>Generate Client Link</strong></li>
+      <li>Share the link with your client via WhatsApp, email, or copy it manually</li>
+    </ol>
+
+    <a href="./admin.html" class="btn-admin">Open Client Setup</a>
+
+    <h2>What Your Client Needs to Do</h2>
+    <ol class="steps">
+      <li>Open the link you sent them (on their phone)</li>
+      <li><strong>Add to Home Screen:</strong> On iPhone, tap the share icon then "Add to Home Screen". On Android, tap the browser menu then "Add to Home Screen" or "Install App"</li>
+      <li>When asked about notifications, tap <strong>Yes, remind me</strong> for daily reminders</li>
+      <li>Each day, open the app and work through the tabs: Habits, Supplements, Diet, Journal</li>
+      <li>In the Journal tab, tap <strong>Email Sam</strong> (or your name) to send you the daily report</li>
+    </ol>
+
+    <div class="highlight">
+      <strong>Tip:</strong> Adding to the home screen is important. It makes the app open in full screen (no browser bar), enables offline use, and on iPhones it is required for notifications to work.
+    </div>
+
+    <h2>Daily Reports</h2>
+    <p>When your client taps the email button, their default email app opens with a pre-formatted report containing:</p>
+    <ul style="margin: 0 0 12px 18px; font-size: 14px;">
+      <li>Every supplement with a tick or cross</li>
+      <li>Every habit with a tick or cross</li>
+      <li>Water intake</li>
+      <li>All meals logged</li>
+      <li>Mood rating</li>
+      <li>Gratitude, daily reflection, and tomorrow's intentions</li>
+    </ul>
+    <p>The subject line format is: <code>[Client Name] Daily Check-in [date]</code>, which makes it easy to search and filter in your inbox.</p>
+
+    <h2>Notifications</h2>
+    <p>The app asks clients for notification permission on first use. If they accept, they will receive gentle reminders at the times you configured (e.g. morning, lunchtime, evening).</p>
+
+    <table class="notif-table">
+      <tr>
+        <th>Device</th>
+        <th>Notifications</th>
+        <th>Notes</th>
+      </tr>
+      <tr>
+        <td>Android (Chrome)</td>
+        <td class="yes">Yes</td>
+        <td>Works reliably when app is added to home screen</td>
+      </tr>
+      <tr>
+        <td>iPhone (Safari)</td>
+        <td class="partial">Yes*</td>
+        <td>Requires iOS 16.4+ and must be added to home screen</td>
+      </tr>
+      <tr>
+        <td>Desktop browser</td>
+        <td class="yes">Yes</td>
+        <td>Works in Chrome, Edge, Firefox</td>
+      </tr>
+    </table>
+
+    <div class="highlight">
+      <strong>Important:</strong> Reminders are scheduled when the client opens the app each day. If they don't open the app at all, reminders for that day won't fire. For clients who need stronger accountability, consider a morning text as a backup for the first couple of weeks until the habit is established.
+    </div>
+
+    <h2>Managing Clients</h2>
+    <p>The <a href="./admin.html">Client Setup page</a> saves your client list in your browser. You can:</p>
+    <ul style="margin: 0 0 12px 18px; font-size: 14px;">
+      <li><strong>Edit:</strong> Load a client's details, change their supplements or habits, generate a new link</li>
+      <li><strong>Link:</strong> Quickly regenerate a client's link (e.g. if they got a new phone)</li>
+      <li><strong>Delete:</strong> Remove a client from your list</li>
+    </ul>
+
+    <div class="highlight">
+      <strong>Updating a client's plan:</strong> If you change a client's supplements or habits, generate a new link and send it to them. When they open the new link, their app updates to the new plan. Their existing tracking data is preserved.
+    </div>
+
+    <h2>Data and Privacy</h2>
+
+    <div class="privacy-box">
+      <h3>Privacy Guarantee</h3>
+      <ul>
+        <li><strong>All client data stays in their browser.</strong> Tracking data (habits, supplements, meals, journal entries) is stored in the browser's localStorage on the client's own device. It is never sent to any server.</li>
+        <li><strong>No accounts, no databases, no cloud storage.</strong> There is no backend. The app is a set of static files hosted on GitHub Pages.</li>
+        <li><strong>The only data that leaves the device</strong> is the daily report email, which the client sends manually from their own email app to your email address. They can read exactly what will be sent before it goes.</li>
+        <li><strong>Client configuration</strong> (name, supplements, habits) is encoded in the link you share. It is saved to the client's browser on first open. It is not stored on any server.</li>
+        <li><strong>Your client list</strong> on the admin page is stored in your browser's localStorage only. If you clear your browser data, you lose it (but you can always recreate clients).</li>
+        <li><strong>No analytics, no tracking, no cookies.</strong> The app loads one external resource: the TruSelf logo from truself.co.uk. Everything else runs locally.</li>
+      </ul>
+    </div>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <dl class="faq">
+      <dt>What if a client gets a new phone?</dt>
+      <dd>Send them their link again (use the "Link" button on your client list). When they open it on the new phone, their app is set up fresh. Previous tracking data from the old phone won't carry over, as it was stored locally on that device.</dd>
+
+      <dt>Can a client use this on more than one device?</dt>
+      <dd>Yes, they can open the link on any device. Each device maintains its own tracking data independently. The daily email report is how data is shared with you.</dd>
+
+      <dt>What if a client denies notification permission?</dt>
+      <dd>The app works perfectly without notifications. They just won't get reminders. The app will show a small note suggesting they enable notifications in their browser settings.</dd>
+
+      <dt>Can I use this for group programmes?</dt>
+      <dd>Yes. Create a separate link for each client with their specific supplements and habits. Each client's app is completely independent.</dd>
+
+      <dt>Does the client need internet to use the app?</dt>
+      <dd>Only for the first time they open the link (to load the app). After that, it works fully offline. The app caches itself for offline use.</dd>
+
+      <dt>Can I see a client's data without them emailing me?</dt>
+      <dd>No. Data stays on the client's device. The only way for you to see their progress is through the daily report they email you. This is by design for privacy.</dd>
+
+      <dt>What happens if I change the supplements for a client mid-programme?</dt>
+      <dd>Generate a new link with the updated supplements and send it to the client. When they open it, their app updates. Their existing tracking data is preserved, though the history view may show the old supplement count for previous days.</dd>
+
+      <dt>Is this app free?</dt>
+      <dd>Yes. It runs on GitHub Pages (free hosting) with no backend costs. There are no usage limits.</dd>
+    </dl>
+
+    <h2>Technical Notes</h2>
+    <p>For anyone extending this app in future:</p>
+    <ul style="margin: 0 0 12px 18px; font-size: 13px; color: var(--text-dim);">
+      <li>Built as a Progressive Web App (PWA) with service worker caching</li>
+      <li>All data stored in browser localStorage, namespaced by client name</li>
+      <li>Client config is base64-encoded in URL hash fragments (never sent to server)</li>
+      <li>Hosted on GitHub Pages: <code>DavidWard8668/truself-daily</code></li>
+      <li>No build step, no dependencies, no framework. Plain HTML, CSS, and JavaScript</li>
+      <li>To deploy changes: push to the <code>master</code> branch</li>
+    </ul>
+
+  </div>
+
+</body>
+</html>
