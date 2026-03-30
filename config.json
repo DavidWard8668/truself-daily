@@ -1,0 +1,25 @@
+{
+  "clientName": "Dave Ward",
+  "appTitle": "TruSelf Daily",
+  "coachName": "Sam Sinclair",
+  "coachEmail": "samsinclair@truself.co.uk",
+  "reminders": ["08:00", "12:30", "19:00"],
+  "supplements": [
+    "DoNotAge Pure Spermidine",
+    "DoNotAge Probiotic",
+    "DoNotAge Pure NMN",
+    "DoNotAge Pure TMG",
+    "DoNotAge Pure NR",
+    "Vitamin D3 + K2 (4000iu)",
+    "Magnesium Glycinate",
+    "Glucosamine & Chondroitin",
+    "Biotin (B7)",
+    "Omega 3 Fish Oil (2000mg)"
+  ],
+  "habits": [
+    "Sleep (7+ hrs)",
+    "Exercise",
+    "Cold Dip",
+    "Sauna"
+  ]
+}

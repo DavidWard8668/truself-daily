@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#ed8439">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>TruSelf Daily</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" href="https://truself.co.uk/wp-content/uploads/2025/12/Truself-logo.png">
+  <link rel="apple-touch-icon" href="https://truself.co.uk/wp-content/uploads/2025/12/Truself-logo.png">
+  <style>
+    :root {
+      --primary: #ed8439;
+      --primary-dark: #d4722e;
+      --accent-green: #6fcf97;
+      --accent-peach: #f9dfce;
+      --bg: #1a1a2e;
+      --bg2: #16213e;
+      --card: rgba(22, 33, 62, 0.6);
+      --card-hi: rgba(22, 33, 62, 0.8);
+      --input: rgba(15, 52, 96, 0.5);
+      --text: #c8d6e5;
+      --text-bright: #f0f0f0;
+      --text-dim: #7a8fa3;
+      --text-muted: #566a7f;
+      --green: #22c55e;
+      --green-bg: rgba(34, 197, 94, 0.08);
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --border: rgba(237, 132, 57, 0.15);
+      --border-dim: rgba(237, 132, 57, 0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(160deg, var(--bg) 0%, var(--bg2) 50%, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      padding-bottom: 40px;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
+      padding: 18px 20px 14px;
+      border-bottom: 2px solid var(--primary);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner { max-width: 540px; margin: 0 auto; }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .header-top img {
+      height: 36px;
+      flex-shrink: 0;
+    }
+
+    .header-info { flex: 1; }
+
+    .header-info h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.3px;
+    }
+
+    .header-info .tagline {
+      font-size: 9px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+
+    .header-pct {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .header-pct .pct {
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    .header-pct .pct-label {
+      font-size: 9px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .header .date {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 4px;
+    }
+
+    .header .greeting {
+      font-size: 13px;
+      color: var(--accent-peach);
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 5px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.5s ease, background 0.5s ease;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 2px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 3px;
+      margin-top: 10px;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 8px 4px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: none;
+    }
+
+    .tab.active {
+      background: rgba(237, 132, 57, 0.2);
+      color: var(--primary);
+    }
+
+    /* Container */
+    .container {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 16px 16px 24px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border-dim);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .card-dashed {
+      background: rgba(22, 33, 62, 0.3);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .card-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+
+    .card-label.dim { color: var(--text-muted); }
+
+    /* Checklist */
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-dim);
+      cursor: pointer;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .check-item:last-child { border-bottom: none; }
+
+    .check-box {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .check-box.checked {
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .check-box.checked::after {
+      content: '\2713';
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .check-label {
+      font-size: 14px;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .check-item.done .check-label {
+      color: var(--text-muted);
+      text-decoration: line-through;
+    }
+
+    /* Water */
+    .water-row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .water-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      background: transparent;
+    }
+
+    .water-dot.filled {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .water-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 6px;
+    }
+
+    /* Mood */
+    .mood-row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .mood-btn {
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mood-btn.active {
+      background: rgba(237, 132, 57, 0.2);
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+
+    /* Inputs */
+    .text-input {
+      width: 100%;
+      background: var(--input);
+      border: 1px solid var(--border-dim);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: inherit;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .text-input::placeholder { color: var(--text-muted); }
+    .text-input:focus { outline: none; border-color: var(--primary); }
+    .mb-8 { margin-bottom: 8px; }
+
+    /* Buttons */
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 8px;
+    }
+
+    .btn-email {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: white;
+    }
+
+    .btn-email:active { transform: scale(0.98); }
+
+    .btn-reset {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .btn-reset:active { background: rgba(239, 68, 68, 0.1); }
+
+    .btn-export {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+
+    .btn-danger {
+      background: transparent;
+      border: 1px solid var(--red);
+      color: var(--red);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    /* History */
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-dim);
+      cursor: pointer;
+    }
+
+    .history-item:last-child { border-bottom: none; }
+    .history-date { font-size: 13px; color: var(--text); }
+    .history-pct { font-size: 13px; font-weight: 700; }
+    .history-detail { font-size: 11px; color: var(--text-dim); }
+
+    .streak-banner {
+      text-align: center;
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+
+    /* Detail modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 200;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .modal-overlay.active { display: block; }
+
+    .modal {
+      background: var(--bg2);
+      border-radius: 16px;
+      padding: 20px;
+      max-width: 500px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+    }
+
+    .modal h2 {
+      color: var(--primary);
+      margin-bottom: 16px;
+      font-size: 16px;
+    }
+
+    .modal .close-btn {
+      float: right;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 24px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .modal-section { margin-bottom: 14px; }
+
+    .modal-section h3 {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .modal-section p, .modal-section li {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .modal-section ul { list-style: none; padding: 0; }
+    .modal-section li { padding: 2px 0; }
+    .tick { color: var(--green); }
+    .cross { color: var(--red); }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--green);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 300;
+      opacity: 0;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.error { background: var(--red); }
+
+    /* Notification prompt */
+    .notif-prompt {
+      background: rgba(237, 132, 57, 0.1);
+      border: 1px solid rgba(237, 132, 57, 0.3);
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .notif-prompt p {
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .notif-prompt button {
+      padding: 8px 20px;
+      border-radius: 8px;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 0 4px;
+    }
+
+    .notif-accept {
+      background: var(--primary);
+      color: white;
+    }
+
+    .notif-dismiss {
+      background: transparent;
+      border: 1px solid var(--border) !important;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-inner">
+      <div class="header-top">
+        <img src="https://truself.co.uk/wp-content/uploads/2025/12/Truself-logo.png" alt="TruSelf" id="logo">
+        <div class="header-info">
+          <h1 id="appTitle">TruSelf Daily</h1>
+          <div class="tagline">Redefine Your Health From Within</div>
+        </div>
+        <div class="header-pct">
+          <div class="pct" id="pctDisplay">0%</div>
+          <div class="pct-label">today's progress</div>
+        </div>
+      </div>
+      <div class="date" id="dateDisplay"></div>
+      <div class="greeting" id="greeting"></div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="tabs" id="tabBar"></div>
+    </div>
+  </div>
+
+  <div class="container" id="content"></div>
+
+  <!-- Detail modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <button class="close-btn" id="modalClose">&times;</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ===================== CONFIG (loaded from config.json) =====================
+    let CONFIG = {
+      clientName: 'User',
+      appTitle: 'TruSelf Daily',
+      coachName: 'Coach',
+      coachEmail: '',
+      reminders: [],
+      supplements: [],
+      habits: []
+    };
+
+    const MOODS = ["\u{1F629}", "\u{1F614}", "\u{1F610}", "\u{1F642}", "\u{1F604}", "\u{1F525}"];
+    const MOOD_LABELS = ["Awful", "Low", "Okay", "Good", "Great", "On Fire"];
+    const WATER_TARGET = 8;
+    const TABS = ["habits", "supplements", "diet", "journal", "history"];
+    const TAB_LABELS = { habits: "Habits", supplements: "Supps", diet: "Diet", journal: "Journal", history: "History" };
+    const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    let state = { tab: "habits" };
+
+    // ===================== STORAGE =====================
+    // Storage key is namespaced by clientName so multiple clients don't collide
+    function storagePrefix() {
+      return `truself_${CONFIG.clientName.replace(/\s+/g, '_').toLowerCase()}`;
+    }
+
+    function todayKey() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function defaultDay() {
+      return {
+        supplements: CONFIG.supplements.map(() => false),
+        habits: CONFIG.habits.map(() => false),
+        water: 0,
+        meals: [
+          { name: "", notes: "" },
+          { name: "", notes: "" },
+          { name: "", notes: "" },
+          { name: "", notes: "" }
+        ],
+        mood: -1,
+        gratitude: "",
+        journal: "",
+        intentions: "",
+        emailed: false
+      };
+    }
+
+    function loadDay(key) {
+      try {
+        const raw = localStorage.getItem(storagePrefix() + ':' + key);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          return { ...defaultDay(), ...parsed };
+        }
+      } catch (e) { /* ignore */ }
+      return defaultDay();
+    }
+
+    function saveDay(key, data) {
+      localStorage.setItem(storagePrefix() + ':' + key, JSON.stringify(data));
+    }
+
+    function getDay() { return loadDay(todayKey()); }
+
+    function setDay(data) {
+      saveDay(todayKey(), data);
+      render();
+    }
+
+    // ===================== PROGRESS =====================
+    function calcProgress(day) {
+      let total = 0, done = 0;
+
+      // Supplements
+      total += CONFIG.supplements.length;
+      done += day.supplements ? day.supplements.filter(Boolean).length : 0;
+
+      // Habits
+      total += CONFIG.habits.length;
+      done += day.habits ? day.habits.filter(Boolean).length : 0;
+
+      // Water (proportional)
+      total += WATER_TARGET;
+      done += Math.min(day.water || 0, WATER_TARGET);
+
+      // Meals (3 main)
+      total += 3;
+      if (day.meals) {
+        done += day.meals.slice(0, 3).filter(m => m && m.name && m.name.trim()).length;
+      }
+
+      // Journal
+      total += 1;
+      done += (day.journal && day.journal.trim().length > 10) ? 1 : 0;
+
+      return total > 0 ? Math.round((done / total) * 100) : 0;
+    }
+
+    function getStreak() {
+      let streak = 0;
+      const today = new Date();
+      for (let i = 0; i < 365; i++) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        const data = loadDay(key);
+        if (calcProgress(data) >= 50) {
+          streak++;
+        } else {
+          break;
+        }
+      }
+      return streak;
+    }
+
+    // ===================== UTILS =====================
+    function esc(s) {
+      return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function formatDate(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      return `${DAY_NAMES[d.getDay()].slice(0, 3)} ${d.getDate()} ${MONTH_NAMES[d.getMonth()].slice(0, 3)}`;
+    }
+
+    function showToast(msg, isError) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = `toast show${isError ? ' error' : ''}`;
+      setTimeout(() => { toast.className = 'toast'; }, 3000);
+    }
+
+    // ===================== RENDER =====================
+    function render() {
+      const day = getDay();
+      const pct = calcProgress(day);
+      const now = new Date();
+
+      // Header date and greeting
+      document.getElementById('dateDisplay').textContent =
+        `${DAY_NAMES[now.getDay()]}, ${now.getDate()} ${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()}`;
+
+      const hour = now.getHours();
+      const timeGreeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+      const firstName = CONFIG.clientName.split(' ')[0];
+      document.getElementById('greeting').textContent = `${timeGreeting}, ${firstName}`;
+
+      // Progress
+      document.getElementById('pctDisplay').textContent = pct + '%';
+      document.getElementById('pctDisplay').style.color =
+        pct >= 80 ? '#22c55e' : pct >= 50 ? '#f59e0b' : pct > 0 ? '#ef4444' : 'var(--text-muted)';
+
+      const fill = document.getElementById('progressFill');
+      fill.style.width = pct + '%';
+      fill.style.background = pct >= 80
+        ? 'linear-gradient(90deg, #22c55e, #6fcf97)'
+        : pct >= 50
+          ? 'linear-gradient(90deg, #f59e0b, #fbbf24)'
+          : 'linear-gradient(90deg, #ed8439, #f59e0b)';
+
+      // Tabs
+      let tabHtml = '';
+      TABS.forEach(t => {
+        tabHtml += `<button class="tab ${state.tab === t ? 'active' : ''}" onclick="switchTab('${t}')">${TAB_LABELS[t]}</button>`;
+      });
+      document.getElementById('tabBar').innerHTML = tabHtml;
+
+      // Content
+      let html = '';
+
+      // --- HABITS TAB ---
+      if (state.tab === 'habits') {
+        html += `<div class="card"><div class="card-label">Daily Habits</div>`;
+        CONFIG.habits.forEach((h, i) => {
+          const checked = day.habits[i];
+          html += `<div class="check-item ${checked ? 'done' : ''}" onclick="toggleHabit(${i})">
+            <div class="check-box ${checked ? 'checked' : ''}"></div>
+            <div class="check-label">${esc(h)}</div>
+          </div>`;
+        });
+        html += `</div>`;
+
+        // Water
+        html += `<div class="card"><div class="card-label">Water Intake</div><div class="water-row">`;
+        for (let i = 1; i <= WATER_TARGET; i++) {
+          html += `<button class="water-dot ${i <= day.water ? 'filled' : ''}" onclick="setWater(${i})"></button>`;
+        }
+        html += `</div><div class="water-label">${day.water} / ${WATER_TARGET} glasses</div></div>`;
+      }
+
+      // --- SUPPLEMENTS TAB ---
+      if (state.tab === 'supplements') {
+        html += `<div class="card"><div class="card-label">Supplements</div>`;
+        CONFIG.supplements.forEach((s, i) => {
+          const checked = day.supplements[i];
+          html += `<div class="check-item ${checked ? 'done' : ''}" onclick="toggleSupplement(${i})">
+            <div class="check-box ${checked ? 'checked' : ''}"></div>
+            <div class="check-label">${esc(s)}</div>
+          </div>`;
+        });
+        html += `</div>`;
+      }
+
+      // --- DIET TAB ---
+      if (state.tab === 'diet') {
+        const mealNames = ['Breakfast', 'Lunch', 'Dinner'];
+        mealNames.forEach((meal, idx) => {
+          html += `<div class="card">
+            <div class="card-label">${meal}</div>
+            <input class="text-input mb-8" value="${esc(day.meals[idx]?.name || '')}"
+              placeholder="What did you eat?" oninput="updateMeal(${idx},'name',this.value)">
+            <textarea class="text-input" rows="2"
+              placeholder="Notes (calories, macros, how you felt...)"
+              oninput="updateMeal(${idx},'notes',this.value)">${esc(day.meals[idx]?.notes || '')}</textarea>
+          </div>`;
+        });
+        html += `<div class="card-dashed">
+          <div class="card-label dim">Snacks &amp; Extras</div>
+          <textarea class="text-input" rows="2" placeholder="Snacks, drinks, treats..."
+            oninput="updateSnacks(this.value)">${esc(day.meals[3]?.notes || '')}</textarea>
+        </div>`;
+      }
+
+      // --- JOURNAL TAB ---
+      if (state.tab === 'journal') {
+        // Mood
+        html += `<div class="card"><div class="card-label">How are you feeling?</div><div class="mood-row">`;
+        MOODS.forEach((m, i) => {
+          html += `<button class="mood-btn ${day.mood === i ? 'active' : ''}" onclick="setMood(${i})">${m}</button>`;
+        });
+        html += `</div></div>`;
+
+        // Gratitude
+        html += `<div class="card">
+          <div class="card-label">Gratitude</div>
+          <textarea class="text-input" rows="3" placeholder="Three things you're grateful for today..."
+            oninput="updateField('gratitude',this.value)">${esc(day.gratitude)}</textarea>
+        </div>`;
+
+        // Journal
+        html += `<div class="card">
+          <div class="card-label">Daily Reflection</div>
+          <textarea class="text-input" rows="7"
+            placeholder="How was your day? What's on your mind? What did you learn?"
+            oninput="updateField('journal',this.value)">${esc(day.journal)}</textarea>
+        </div>`;
+
+        // Tomorrow's intentions
+        html += `<div class="card-dashed">
+          <div class="card-label dim">Tomorrow's Intentions</div>
+          <textarea class="text-input" rows="3" placeholder="What do you want to focus on tomorrow?"
+            oninput="updateField('intentions',this.value)">${esc(day.intentions || '')}</textarea>
+        </div>`;
+
+        // Email coach button
+        html += `<button class="btn-primary btn-email" onclick="emailCoach()">
+          ${day.emailed ? '\u2709 Email ' + esc(CONFIG.coachName) + ' Again' : '\u2709 Email ' + esc(CONFIG.coachName)}
+        </button>`;
+      }
+
+      // --- HISTORY TAB ---
+      if (state.tab === 'history') {
+        const streak = getStreak();
+        if (streak > 0) {
+          html += `<div class="streak-banner" style="background: var(--green-bg); border: 1px solid rgba(34,197,94,0.2);">
+            <div style="font-size: 28px;">\u{1F525}</div>
+            <div style="font-size: 18px; font-weight: 700; color: var(--green); margin-top: 4px;">${streak} Day Streak</div>
+            <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px;">Days with 50%+ completion</div>
+          </div>`;
+        }
+
+        html += `<div class="card"><div class="card-label">Last 14 Days</div>`;
+        const today = new Date();
+        let hasHistory = false;
+        for (let i = 0; i < 14; i++) {
+          const d = new Date(today);
+          d.setDate(d.getDate() - i);
+          const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+          const data = loadDay(key);
+          const p = calcProgress(data);
+          const label = i === 0 ? 'Today' : i === 1 ? 'Yesterday' : formatDate(key);
+          const color = p >= 80 ? 'var(--green)' : p >= 50 ? 'var(--amber)' : p > 0 ? 'var(--red)' : 'var(--text-muted)';
+
+          html += `<div class="history-item" onclick="showDayDetail('${key}')">
+            <div>
+              <div class="history-date">${label}</div>
+              ${p > 0 ? `<div class="history-detail">${data.habits ? data.habits.filter(Boolean).length : 0}/${CONFIG.habits.length} habits \u00B7 ${data.supplements ? data.supplements.filter(Boolean).length : 0}/${CONFIG.supplements.length} supps \u00B7 ${data.water || 0} water</div>` : ''}
+            </div>
+            <div class="history-pct" style="color:${color}">${p > 0 ? p + '%' : '\u2014'}</div>
+          </div>`;
+          if (p > 0) hasHistory = true;
+        }
+        html += `</div>`;
+
+        // Export and clear
+        html += `<div style="margin-top: 12px;">
+          <button class="btn-export" onclick="exportData()">Export All Data (JSON)</button>
+          <button class="btn-danger" onclick="clearAllData()">Clear All Data</button>
+        </div>`;
+      }
+
+      // Reset button (not on history tab)
+      if (state.tab !== 'history') {
+        html += `<div style="text-align:center; margin-top:16px;">
+          <button class="btn-reset" onclick="resetToday()">Reset Today</button>
+        </div>`;
+      }
+
+      document.getElementById('content').innerHTML = html;
+    }
+
+    // ===================== ACTIONS =====================
+    function switchTab(t) { state.tab = t; render(); }
+
+    function toggleHabit(i) {
+      const day = getDay();
+      day.habits[i] = !day.habits[i];
+      setDay(day);
+    }
+
+    function toggleSupplement(i) {
+      const day = getDay();
+      day.supplements[i] = !day.supplements[i];
+      setDay(day);
+    }
+
+    function setWater(n) {
+      const day = getDay();
+      day.water = (day.water === n) ? n - 1 : n;
+      setDay(day);
+    }
+
+    function setMood(i) {
+      const day = getDay();
+      day.mood = (day.mood === i) ? -1 : i;
+      setDay(day);
+    }
+
+    function updateMeal(idx, field, val) {
+      const day = getDay();
+      if (!day.meals[idx]) day.meals[idx] = { name: '', notes: '' };
+      day.meals[idx][field] = val;
+      saveDay(todayKey(), day);
+    }
+
+    function updateSnacks(val) {
+      const day = getDay();
+      if (!day.meals[3]) day.meals[3] = { name: 'Snacks', notes: '' };
+      day.meals[3].notes = val;
+      saveDay(todayKey(), day);
+    }
+
+    function updateField(field, val) {
+      const day = getDay();
+      day[field] = val;
+      saveDay(todayKey(), day);
+    }
+
+    function resetToday() {
+      if (confirm("Reset all of today's data? This can't be undone.")) {
+        setDay(defaultDay());
+      }
+    }
+
+    // ===================== EMAIL COACH =====================
+    function emailCoach() {
+      const day = getDay();
+      const pct = calcProgress(day);
+      const now = new Date();
+      const dateStr = `${DAY_NAMES[now.getDay()]}, ${now.getDate()} ${MONTH_NAMES[now.getMonth()]}`;
+
+      let body = `${CONFIG.clientName} \u2014 Daily Check-in: ${pct}% Complete\n${dateStr}\n`;
+      body += '='.repeat(40) + '\n\n';
+
+      // Supplements
+      body += 'SUPPLEMENTS\n';
+      CONFIG.supplements.forEach((s, i) => {
+        body += `${day.supplements[i] ? '\u2705' : '\u274C'} ${s}\n`;
+      });
+      const suppCount = day.supplements.filter(Boolean).length;
+      body += `\n${suppCount}/${CONFIG.supplements.length} taken\n\n`;
+
+      // Habits
+      body += 'HABITS\n';
+      CONFIG.habits.forEach((h, i) => {
+        body += `${day.habits[i] ? '\u2705' : '\u274C'} ${h}\n`;
+      });
+      const habCount = day.habits.filter(Boolean).length;
+      body += `\n${habCount}/${CONFIG.habits.length} completed\n\n`;
+
+      // Water
+      body += `WATER: ${day.water}/${WATER_TARGET} glasses\n\n`;
+
+      // Meals
+      body += 'MEALS\n';
+      ['Breakfast', 'Lunch', 'Dinner'].forEach((name, i) => {
+        const m = day.meals[i];
+        if (m && m.name && m.name.trim()) {
+          body += `${name}: ${m.name.trim()}`;
+          if (m.notes && m.notes.trim()) body += `\n  Notes: ${m.notes.trim()}`;
+          body += '\n\n';
+        } else {
+          body += `${name}: Not logged\n\n`;
+        }
+      });
+      if (day.meals[3] && day.meals[3].notes && day.meals[3].notes.trim()) {
+        body += `Snacks: ${day.meals[3].notes.trim()}\n\n`;
+      }
+
+      // Mood
+      if (day.mood >= 0) {
+        body += `MOOD: ${MOODS[day.mood]} ${MOOD_LABELS[day.mood]}\n\n`;
+      }
+
+      // Gratitude
+      if (day.gratitude && day.gratitude.trim()) {
+        body += `GRATITUDE\n${day.gratitude.trim()}\n\n`;
+      }
+
+      // Journal
+      if (day.journal && day.journal.trim()) {
+        body += `DAILY REFLECTION\n${day.journal.trim()}\n\n`;
+      }
+
+      // Intentions
+      if (day.intentions && day.intentions.trim()) {
+        body += `TOMORROW'S INTENTIONS\n${day.intentions.trim()}\n\n`;
+      }
+
+      body += '='.repeat(40) + '\n';
+      body += `Sent from ${CONFIG.appTitle}`;
+
+      const subject = `[${CONFIG.clientName}] Daily Check-in ${dateStr}`;
+      const mailto = `mailto:${CONFIG.coachEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailto;
+
+      day.emailed = true;
+      setDay(day);
+      showToast('Opening email client...');
+    }
+
+    // ===================== HISTORY DETAIL =====================
+    function showDayDetail(key) {
+      const data = loadDay(key);
+      const pct = calcProgress(data);
+      if (pct === 0) return;
+
+      let html = `<h2>${formatDate(key)}</h2>`;
+
+      // Mood
+      if (data.mood >= 0) {
+        html += `<div class="modal-section"><h3>Mood</h3><p>${MOODS[data.mood]} ${MOOD_LABELS[data.mood]}</p></div>`;
+      }
+
+      // Habits
+      html += '<div class="modal-section"><h3>Habits</h3><ul>';
+      CONFIG.habits.forEach((h, i) => {
+        const done = data.habits && data.habits[i];
+        html += `<li><span class="${done ? 'tick' : 'cross'}">${done ? '\u2713' : '\u2717'}</span> ${esc(h)}</li>`;
+      });
+      html += '</ul></div>';
+
+      // Supplements
+      html += '<div class="modal-section"><h3>Supplements</h3><ul>';
+      CONFIG.supplements.forEach((s, i) => {
+        const done = data.supplements && data.supplements[i];
+        html += `<li><span class="${done ? 'tick' : 'cross'}">${done ? '\u2713' : '\u2717'}</span> ${esc(s)}</li>`;
+      });
+      html += '</ul></div>';
+
+      // Water
+      html += `<div class="modal-section"><h3>Water</h3><p>${data.water || 0} / ${WATER_TARGET} glasses</p></div>`;
+
+      // Meals
+      if (data.meals) {
+        html += '<div class="modal-section"><h3>Diet</h3>';
+        ['Breakfast', 'Lunch', 'Dinner'].forEach((name, i) => {
+          const m = data.meals[i];
+          if (m && m.name && m.name.trim()) {
+            html += `<p><strong>${name}:</strong> ${esc(m.name)}`;
+            if (m.notes && m.notes.trim()) html += ` (${esc(m.notes)})`;
+            html += '</p>';
+          }
+        });
+        if (data.meals[3] && data.meals[3].notes && data.meals[3].notes.trim()) {
+          html += `<p><strong>Snacks:</strong> ${esc(data.meals[3].notes)}</p>`;
+        }
+        html += '</div>';
+      }
+
+      // Gratitude
+      if (data.gratitude && data.gratitude.trim()) {
+        html += `<div class="modal-section"><h3>Gratitude</h3><p>${esc(data.gratitude)}</p></div>`;
+      }
+
+      // Journal
+      if (data.journal && data.journal.trim()) {
+        html += `<div class="modal-section"><h3>Daily Reflection</h3><p>${esc(data.journal)}</p></div>`;
+      }
+
+      // Intentions
+      if (data.intentions && data.intentions.trim()) {
+        html += `<div class="modal-section"><h3>Tomorrow's Intentions</h3><p>${esc(data.intentions)}</p></div>`;
+      }
+
+      document.getElementById('modalContent').innerHTML = html;
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    // ===================== EXPORT / CLEAR =====================
+    function exportData() {
+      const prefix = storagePrefix() + ':';
+      const allData = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith(prefix)) {
+          const dateKey = key.substring(prefix.length);
+          try { allData[dateKey] = JSON.parse(localStorage.getItem(key)); } catch (e) { /* skip */ }
+        }
+      }
+      const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `truself-daily-${CONFIG.clientName.replace(/\s+/g, '-').toLowerCase()}-export.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Data exported!');
+    }
+
+    function clearAllData() {
+      if (confirm(`Delete ALL ${CONFIG.appTitle} data for ${CONFIG.clientName}? This cannot be undone.`)) {
+        const prefix = storagePrefix() + ':';
+        const toRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key.startsWith(prefix)) toRemove.push(key);
+        }
+        toRemove.forEach(k => localStorage.removeItem(k));
+        showToast('All data cleared');
+        render();
+      }
+    }
+
+    // ===================== MODAL =====================
+    document.getElementById('modalClose').addEventListener('click', () => {
+      document.getElementById('modalOverlay').classList.remove('active');
+    });
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) {
+        document.getElementById('modalOverlay').classList.remove('active');
+      }
+    });
+
+    // ===================== SERVICE WORKER =====================
+    function registerSW() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => {
+            console.log('Service worker registered');
+            // Schedule reminders if notifications are permitted
+            if (Notification.permission === 'granted' && CONFIG.reminders.length > 0) {
+              reg.active?.postMessage({ type: 'SCHEDULE_REMINDERS', times: CONFIG.reminders });
+            }
+          })
+          .catch((err) => console.error('SW registration failed:', err));
+      }
+    }
+
+    // ===================== INIT =====================
+    async function init() {
+      try {
+        const resp = await fetch('./config.json');
+        CONFIG = await resp.json();
+      } catch (e) {
+        console.error('Failed to load config:', e);
+      }
+
+      document.getElementById('appTitle').textContent = CONFIG.appTitle;
+      document.title = CONFIG.appTitle;
+
+      render();
+      registerSW();
+    }
+
+    init();
+  </script>
+</body>
+</html>
